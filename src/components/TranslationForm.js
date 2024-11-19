@@ -9,6 +9,7 @@ import TranslationArea from "./TranslationArea";
 import LanguageSelector from "./LanguageSelector";
 
 function TranslationForm({
+  translate,
   onTranslate,
   onTts,
   languages,
@@ -73,13 +74,28 @@ function TranslationForm({
   
     const handleInput = () => {
       clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
+      debounceTimer = setTimeout(async () => {
         let inputText = currentInputRef.innerText;
         if (isBlinkEngine) {
           inputText = inputText.replace(/\n{2}/g, "\n");
         }
         latestInputRef.current = inputText;
         setSourceText(inputText);
+
+        const sentences = inputText.split(/(?<=[.!?])\s+|\n+/);
+        const translatedSentences = await Promise.all(
+          sentences.map(async (sentence, index) => {
+            const translation = await translate(sentence, sourceLang, targetLang);
+            return {
+              id: index,
+              sentence,
+              translation: translation || "",
+            };
+          })
+        );
+
+        //console.log(translatedSentences);
+
         onTranslate(inputText, sourceLang, targetLang);
       }, 500);
     };
@@ -98,7 +114,7 @@ function TranslationForm({
       currentInputRef.removeEventListener("paste", handlePaste);
       clearTimeout(debounceTimer);
     };
-  }, [sourceLang, targetLang, onTranslate, sourceText]);
+  }, [sourceLang, targetLang, onTranslate, sourceText, translate]);
 
   const swapLanguages = () => {
     const newSourceText = translationRef.current.innerText;
@@ -116,6 +132,17 @@ function TranslationForm({
   };
 
   const isTtsDisabled = (lang) => !ttsLanguages.includes(lang);
+
+  const handleHover = (dataIndex, isHovered) => {
+    const elements = document.querySelectorAll(`[data-index='${dataIndex}']`);
+    elements.forEach(el => {
+      if (isHovered) {
+        el.classList.add("highlighted");
+      } else {
+        el.classList.remove("highlighted");
+      }
+    });
+  };
 
   return (
     <div className="translation-form">
@@ -149,6 +176,7 @@ function TranslationForm({
           onTts={onTts}
           setIsAudioPlaying={setIsAudioPlaying}
           isTtsDisabled={isTtsDisabled}
+          onHover={handleHover}
         />
         <TranslationArea
           translationRef={translationRef}
@@ -159,6 +187,7 @@ function TranslationForm({
           onTts={onTts}
           setIsAudioPlaying={setIsAudioPlaying}
           isTtsDisabled={isTtsDisabled}
+          onHover={handleHover}
         ></TranslationArea>
       </div>
     </div>

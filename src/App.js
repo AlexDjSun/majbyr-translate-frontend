@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-dom";
 
-
 import logo from "./assets/logo.svg";
 
 import TranslationForm from "./components/TranslationForm";
@@ -49,6 +48,33 @@ function App() {
     };
     loadData();
   }, []);
+
+  const handleTranslation = async (text, src, tgt) => {
+    if (text.trim() === "") {
+      setTranslatedSentences([]);
+      return;
+    }
+    try {
+      const response = await fetch(
+        "https://api.majbyr.com/translate/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text,
+            src,
+            tgt,
+          }),
+        }
+      );
+      const data = await response.json();
+      return data.result;
+    } catch (error) {
+      setTranslatedSentences([[[t("Failed to translate")]]]);
+    }
+  };
 
   const handleComplexTranslation = async (text, src, tgt) => {
     if (text.trim() === "") {
@@ -153,6 +179,7 @@ function App() {
             path="/:src/:tgt"
             element={
               <TranslationForm
+                translate={handleTranslation}
                 onTranslate={handleComplexTranslation}
                 onTts={(text, lang) => handleTts(text, lang, setIsAudioPlaying)}
                 languages={languages}

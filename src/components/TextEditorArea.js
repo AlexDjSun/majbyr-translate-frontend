@@ -12,6 +12,7 @@ function TextEditorArea({
   isAudioPlaying,
   setIsAudioPlaying,
   ttsLanguages,
+  onHover,
 }) {
   const { t } = useTranslation();
 

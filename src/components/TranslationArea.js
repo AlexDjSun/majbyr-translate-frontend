@@ -13,6 +13,7 @@ function TranslationArea({
   isTtsDisabled,
   ttsLanguages,
   translationRef,
+  onHover,
 }) {
 
   const [selectedVariants, setSelectedVariants] = useState([]);
@@ -47,6 +48,8 @@ function TranslationArea({
                 onVariantChange={(newVariant) =>
                   handleVariantChange(paragraphIndex, sentenceIndex, newVariant)
                 }
+                dataIndex={`${paragraphIndex}-${sentenceIndex}`}
+                onHover={onHover}
               />
             ))}
           </div>

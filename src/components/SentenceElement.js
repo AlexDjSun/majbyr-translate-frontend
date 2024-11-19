@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-function SentenceElement({ variants, onVariantChange }) {
+function SentenceElement({ variants, onVariantChange, dataIndex, onHover }) {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [showVariants, setShowVariants] = useState(false);
   const [variantPosition, setVariantPosition] = useState({
@@ -59,6 +59,9 @@ function SentenceElement({ variants, onVariantChange }) {
       className={`translatedSentence ${ showVariants ? "showVariants" : "" }`} 
       onClick={toggleVariants}
       ref={containerRef}
+      data-index={dataIndex}
+      onMouseEnter={() => onHover(dataIndex, true)}
+      onMouseLeave={() => onHover(dataIndex, false)}
     >
       {selectedVariant}{" "}
       {showVariants && (
