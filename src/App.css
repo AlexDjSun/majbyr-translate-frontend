@@ -138,6 +138,10 @@ button:focus {
   border-bottom-left-radius: 0%;
 }
 
+.highlight {
+  background-color: yellow;
+}
+
 .filter-languages {
   padding: 15px;
   width: 100%;
