@@ -28,7 +28,7 @@ function App() {
   
   useEffect(() => {
     const currentLang = lang || i18n.language;
-    const languages = [{ code: 'en' }, { code: 'ru' }, { code: 'kv' }, { code: 'udm' }]; // List all your language codes
+    const languages = [{ code: 'en' }, { code: 'ru' }, { code: 'kv' }, { code: 'udm' }];
     updateHreflangTags(currentLang, languages);
   }, [lang, i18n.language]);
 
@@ -57,7 +57,7 @@ function App() {
     }
     try {
       const response = await fetch(
-        "https://api-majbyr-translate.rahtiapp.fi/translate_by_sentences/",
+        "https://api.majbyr.com/translate_by_sentences/",
         {
           method: "POST",
           headers: {
@@ -83,7 +83,7 @@ function App() {
     }
     try {
       // Construct the URL with query parameters
-      const url = new URL("https://api-majbyr-translate.rahtiapp.fi/tts/");
+      const url = new URL("https://api.majbyr.com/tts/");
       url.searchParams.append("text", text);
       url.searchParams.append("lang", lang);
       setIsAudioPlaying(true);
@@ -115,7 +115,7 @@ function App() {
   const getTranslationLanguages = async () => {
     try {
       const response = await fetch(
-        "https://api-majbyr-translate.rahtiapp.fi/translation_languages/"
+        "https://api.majbyr.com/translation_languages/"
       );
       const data = await response.json();
       setLanguages(data.languages);
@@ -127,7 +127,7 @@ function App() {
   const getTtsLanguages = async () => {
     try {
       const response = await fetch(
-        "https://api-majbyr-translate.rahtiapp.fi/tts_languages/"
+        "https://api.majbyr.com/tts_languages/"
       );
       const data = await response.json();
       setTtsLanguages(data.languages);
