@@ -1,4 +1,6 @@
 FROM node:alpine AS builder
+
+RUN adduser -D -g '' www
 WORKDIR /app
 COPY package.json .
 RUN npm install
