@@ -27,6 +27,7 @@ function TranslationForm({
   const inputRef = useRef(null);
   const translationRef = useRef(null);
   const navigate = useNavigate();
+  const latestInputRef = useRef(sourceText);
 
   function isBlinkEngine() {
     const isChrome = window.chrome;
@@ -67,9 +68,9 @@ function TranslationForm({
   useEffect(() => {
     const currentInputRef = inputRef.current;
     if (!currentInputRef) return;
-
+  
     let debounceTimer;
-
+  
     const handleInput = () => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
@@ -77,26 +78,27 @@ function TranslationForm({
         if (isBlinkEngine) {
           inputText = inputText.replace(/\n{2}/g, "\n");
         }
+        latestInputRef.current = inputText;
         setSourceText(inputText);
         onTranslate(inputText, sourceLang, targetLang);
       }, 500);
     };
-
+  
     const handlePaste = (event) => {
       event.preventDefault();
       const text = event.clipboardData.getData("text/plain");
       document.execCommand("insertText", false, text);
     };
-
+  
     currentInputRef.addEventListener("input", handleInput);
     currentInputRef.addEventListener("paste", handlePaste);
-
+  
     return () => {
       currentInputRef.removeEventListener("input", handleInput);
       currentInputRef.removeEventListener("paste", handlePaste);
       clearTimeout(debounceTimer);
     };
-  }, [sourceLang, targetLang, onTranslate]);
+  }, [sourceLang, targetLang, onTranslate, sourceText]);
 
   const swapLanguages = () => {
     const newSourceText = translationRef.current.innerText;
