@@ -34,6 +34,22 @@ function TextEditorArea({
 
   return (
     <div className="input-area">
+      <textarea
+        className="sourceText"
+        ref={inputRef}
+        placeholder={t("Enter text to translate")}
+        style={{ display: "flex", 
+          flexDirection: "column", 
+          position: "absolute", 
+          backgroundColor: "pink", 
+          border: "none", 
+          resize: "none", 
+          width: "50%", 
+          whiteSpace: "pre-wrap",
+          width: "100%",
+          padding: "10px",
+         }}>
+      </textarea>
       <div
         className="sourceText"
         ref={inputRef}
